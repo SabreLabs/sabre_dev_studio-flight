@@ -1,0 +1,19 @@
+{
+  "AirlineInfo": [
+    {
+      "AirlineCode": "AI",
+      "AirlineName": "Air India Limited",
+      "AlternativeBusinessName": "Air India"
+    }
+  ],
+  "Links": [
+    {
+      "rel": "self",
+      "href": "https://api.sabre.com/v1/lists/utilities/airlines?airlinecode=AI"
+    },
+    {
+      "rel": "linkTemplate",
+      "href": "https://api.sabre.com/v1/lists/utilities/airlines?airlinecode=<airlinecode>"
+    }
+  ]
+}

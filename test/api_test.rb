@@ -7,7 +7,7 @@ class ApiTests < Test::Unit::TestCase
       c.client_secret = 'PASSWORD'
       c.uri           = 'https://api.test.sabre.com'
     end
-    stub_request(:post, "https://VjE6VVNFUjpHUk9VUDpET01BSU4%3D:UEFTU1dPUkQ%3D@api.test.sabre.com/v1/auth/token").
+    stub_request(:post, "https://VjE6VVNFUjpHUk9VUDpET01BSU4%3D:UEFTU1dPUkQ%3D@api.test.sabre.com/v2/auth/token").
       to_return(:status => 200, :body =>"{\"access_token\":\"Shared/IDL:IceSess\\\\/SessMgr:1\\\\.0.IDL/Common/!ICESMS\\\\/ACPCRTD!ICESMSLB\\\\/CRT.LB!-3801964284027024638!507667!0!F557CBE649675!E2E-1\",\"token_type\":\"bearer\",\"expires_in\":1800}")
   end
 
@@ -188,5 +188,15 @@ class ApiTests < Test::Unit::TestCase
     assert_equal 'NEWARK', airports.airports.first.name
     assert_equal 3, airports.response['Airports'].count
     assert_equal 'EWR', airports.response['Airports'].first['code']
+  end
+
+  def test_airlines_lookup_api
+    options = { :airlinecode => 'AI' }
+    uri = Addressable::URI.new
+    uri.query_values = options
+    stub_request(:get, "#{SabreDevStudio.configuration.uri}/v1/lists/utilities/airlines?#{uri.query}").
+      to_return(json_response('airlines.json'))
+    airline = SabreDevStudio::Flight::Api.airlines_lookup(options)
+    assert_equal "Air India Limited", airline.airline_info.first.airline_name
   end
 end

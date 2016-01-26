@@ -1,4 +1,5 @@
 require File.expand_path('../airports_at_cities_lookup', __FILE__)
+require File.expand_path('../airlines_lookup', __FILE__)
 require File.expand_path('../city_pairs_lookup', __FILE__)
 require File.expand_path('../destination_finder', __FILE__)
 require File.expand_path('../fare_range', __FILE__)
@@ -13,6 +14,8 @@ require File.expand_path('../travel_theme_lookup', __FILE__)
 module SabreDevStudio
   module Flight
     class Api
+      VERSION = "v1"
+
       ##
       # List of Air Shopping Themes
       #
@@ -22,7 +25,7 @@ module SabreDevStudio
       # ==== Example:
       #    air_shopping_themes = SabreDevStudio::Flight::Api.travel_theme_lookup
       def self.travel_theme_lookup
-        endpoint = '/v1/shop/themes'
+        endpoint = "/#{VERSION}/shop/themes"
         SabreDevStudio::Flight::TravelThemeLookup.new(endpoint)
       end
       class << self; alias_method :air_shopping_themes, :travel_theme_lookup; end
@@ -36,7 +39,7 @@ module SabreDevStudio
       # ==== Example:
       #    airports = SabreDevStudio::Flight::Api.theme_airport_lookup('BEACH')
       def self.theme_airport_lookup(theme)
-        endpoint = "/v1/shop/themes/#{theme}"
+        endpoint = "/#{VERSION}/shop/themes/#{theme}"
         SabreDevStudio::Flight::ThemeAirportLookup.new(endpoint)
       end
 
@@ -57,7 +60,7 @@ module SabreDevStudio
       #    }
       #    fares = SabreDevStudio::Flight::Api.destination_finder(options)
       def self.destination_finder(options)
-        endpoint = '/v1/shop/flights/fares'
+        endpoint = "/#{VERSION}/shop/flights/fares"
         SabreDevStudio::Flight::DestinationFinder.new(endpoint, options)
       end
       class << self; alias_method :destination_air_shop, :destination_finder; end
@@ -78,7 +81,7 @@ module SabreDevStudio
       #    }
       #    fares = SabreDevStudio::Flight::Api.lead_price_calendar(options)
       def self.lead_price_calendar(options)
-        endpoint = '/v1/shop/flights/fares'
+        endpoint = "/#{VERSION}/shop/flights/fares"
         SabreDevStudio::Flight::LeadPriceCalendar.new(endpoint, options)
       end
       class << self; alias_method :future_dates_lead_fare_shop, :lead_price_calendar; end
@@ -103,7 +106,7 @@ module SabreDevStudio
       #    }
       #    itineraries = SabreDevStudio::Flight::Api.instaflights_search(options); nil
       def self.instaflights_search(options)
-        endpoint = '/v1/shop/flights'
+        endpoint = "/#{VERSION}/shop/flights"
         SabreDevStudio::Flight::InstaflightsSearch.new(endpoint, options)
       end
       class << self; alias_method :single_date_air_shop, :instaflights_search; end
@@ -123,7 +126,7 @@ module SabreDevStudio
       #    }
       #    forecast = SabreDevStudio::Flight::Api.low_fare_forecast(options)
       def self.low_fare_forecast(options)
-        endpoint = '/v1/forecast/flights/fares'
+        endpoint = "/#{VERSION}/forecast/flights/fares"
         SabreDevStudio::Flight::LowFareForecast.new(endpoint, options)
       end
 
@@ -143,7 +146,7 @@ module SabreDevStudio
       #    }
       #    fare_range = SabreDevStudio::Flight::Api.fare_range(options)
       def self.fare_range(options)
-        endpoint = '/v1/historical/flights/fares'
+        endpoint = "/#{VERSION}/historical/flights/fares"
         SabreDevStudio::Flight::FareRange.new(endpoint, options)
       end
 
@@ -156,7 +159,7 @@ module SabreDevStudio
       # ==== Example:
       #    travel_seasonality = SabreDevStudio::Flight::Api.travel_seasonality('DFW')
       def self.travel_seasonality(destination)
-        endpoint = "/v1/historical/flights/#{destination}/seasonality"
+        endpoint = "/#{VERSION}/historical/flights/#{destination}/seasonality"
         SabreDevStudio::Flight::TravelSeasonality.new(endpoint)
       end
 
@@ -173,7 +176,7 @@ module SabreDevStudio
       #    }
       #    city_pairs = SabreDevStudio::Flight::Api.city_pairs_lookup
       def self.city_pairs_lookup(options)
-        endpoint = '/v1/lists/airports/supported/origins-destinations'
+        endpoint = "/#{VERSION}/lists/airports/supported/origins-destinations"
         SabreDevStudio::Flight::CityPairsLookup.new(endpoint, options)
       end
 
@@ -187,7 +190,7 @@ module SabreDevStudio
       #    options = { :country => 'US' }
       #    city_pairs = SabreDevStudio::Flight::Api.multiairport_city_lookup(options)
       def self.multiairport_city_lookup(options)
-        endpoint = '/v1/lists/cities'
+        endpoint = "/#{VERSION}/lists/cities"
         SabreDevStudio::Flight::MultiairportCityLookup.new(endpoint, options)
       end
 
@@ -201,8 +204,22 @@ module SabreDevStudio
       #    options = { :city => 'NYC' }
       #    city_pairs = SabreDevStudio::Flight::Api.airports_at_cities_lookup(options)
       def self.airports_at_cities_lookup(options)
-        endpoint = '/v1/lists/airports'
+        endpoint = "/#{VERSION}/lists/airports"
         SabreDevStudio::Flight::AirportsAtCitiesLookup.new(endpoint, options)
+      end
+
+      ##
+      # Airline Lookup
+      #
+      # ==== Documentation:
+      # https://developer.sabre.com/docs/read/rest_apis/utility/airline_lookup
+      #
+      # ==== Example:
+      #    options = { :airlinecode => 'AA' }
+      #    airline = SabreDevStudio::Flight::Api.airlines_lookup(options)
+      def self.airlines_lookup(options)
+        endpoint = "/#{VERSION}/lists/utilities/airlines"
+        SabreDevStudio::Flight::AirlinesLookup.new(endpoint, options)
       end
     end
   end
